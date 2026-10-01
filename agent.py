@@ -1,8 +1,9 @@
 from dotenv import load_dotenv
 from openai import OpenAI
 import os
+from tools import calculator
 
-app = load_dotenv()
+load_dotenv()
 
 client = OpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
