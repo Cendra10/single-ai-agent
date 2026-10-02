@@ -18,3 +18,29 @@ if __name__ == "__main__":
     print(calculator("divide", 10, 0))
     print(calculator("multiply", 2, 3))
     print(calculator("modulo", 7, 2))
+
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "calculator",
+            "description": "Perform a mathematical operation on two numbers.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "operation": {
+                        "type" : "string",
+                        "enum": ["add", "subtract", "divide", "multiply"]
+                        },
+                        "a": {
+                            "type": "number"
+                            },
+                        "b": {
+                            "type": "number"
+                            }
+                },
+                "required": ["operation", "a", "b"]   
+            }
+        }
+    }
+]
