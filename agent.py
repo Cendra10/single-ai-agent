@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from openai import OpenAI
 import os
-from tools import calculator, tools
+from tools import calculator, get_current_time, tools
 import json
 
 load_dotenv()
@@ -12,11 +12,16 @@ client = OpenAI(
 )
 
 MAX_STEPS = 5
+functions ={
+     "calculator": calculator,
+     "get_current_time": get_current_time
+     }
+
 def ask_question():
     messages = [
         {
             "role": "user",
-            "content": "Calculate 123 multiplied by 45, then the result divide by 5."
+            "content": "What time now ? then counting 8 multiply 7."
         }
     ]
 
@@ -34,10 +39,10 @@ def ask_question():
 
                 for tool_call in tool_calls:
                     function_name = tool_call.function.name
+                    function = functions[function_name]
                     arguments = tool_call.function.arguments
-
                     args = json.loads(arguments)
-                    result = calculator(**args)
+                    result = function(**args)
                     
                     messages.append(
                         {
