@@ -11,6 +11,7 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
+MAX_STEPS = 5
 def ask_question():
     messages = [
         {
@@ -19,7 +20,7 @@ def ask_question():
         }
     ]
 
-    while True:
+    for step in range(MAX_STEPS):
         response = client.chat.completions.create(
              model="openai/gpt-oss-20b",
              tools=tools,
@@ -48,5 +49,7 @@ def ask_question():
         else:
             print(message.content)
             break
+    else:
+         print("Stopped: max steps reached.") 
 
 ask_question()
