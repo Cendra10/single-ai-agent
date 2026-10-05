@@ -13,16 +13,19 @@ client = OpenAI(
 
 MAX_STEPS = 5
 functions ={
-     "calculator": calculator
+     "calculator": calculator,
+     "get_current_time": get_current_time
      }
 
-def ask_question():
-    messages = [
-        {
-            "role": "user",
-            "content": "What time now ? then counting 8 multiply 7."
-        }
-    ]
+messages = []
+
+def ask_question(user_input):
+    messages.append(
+         {
+              "role": "user",
+              "content": user_input
+         }
+    )
 
     for step in range(MAX_STEPS):
         response = client.chat.completions.create(
@@ -59,8 +62,14 @@ def ask_question():
                          
         else:
             print(message.content)
+            messages.append(message)
             break
     else:
          print("Stopped: max steps reached.") 
 
-ask_question()
+while True:
+     user_input = input("You: ")
+
+     if user_input.lower() == "exit":
+          break
+     ask_question(user_input)
