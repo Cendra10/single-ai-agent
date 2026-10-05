@@ -13,8 +13,7 @@ client = OpenAI(
 
 MAX_STEPS = 5
 functions ={
-     "calculator": calculator,
-     "get_current_time": get_current_time
+     "calculator": calculator
      }
 
 def ask_question():
@@ -38,19 +37,26 @@ def ask_question():
                 messages.append(message)
 
                 for tool_call in tool_calls:
-                    function_name = tool_call.function.name
-                    function = functions[function_name]
-                    arguments = tool_call.function.arguments
-                    args = json.loads(arguments)
-                    result = function(**args)
-                    
-                    messages.append(
-                        {
-                            "role": "tool",
-                            "tool_call_id": tool_call.id,
-                            "content": str(result)
-                        }
-                    )
+                        function_name = tool_call.function.name
+
+                        if function_name not in functions:
+                              result = f"Error: tool '{function_name}' is not available."
+                        else:
+                            try:
+                                function = functions[function_name]
+                                arguments = tool_call.function.arguments
+                                args = json.loads(arguments)
+                                result = function(**args)
+                            except Exception as e:
+                                 result = f"Error: {e}"
+                        messages.append(
+                             {
+                                "role": "tool",
+                                "tool_call_id": tool_call.id,
+                                "content": str(result)
+                            }
+                        )
+                         
         else:
             print(message.content)
             break
