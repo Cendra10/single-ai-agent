@@ -17,7 +17,15 @@ functions ={
      "get_current_time": get_current_time
      }
 
-messages = []
+SYSTEM_PROMPT = "Before calling any tool, you MUST first write your plan as plain text in 1-2 sentences. Use a tool when necessary. do not guess calculations or time. If no suitable tool is available, say so honestly."
+    
+messages = [
+     {
+          "role": "system",
+          "content": SYSTEM_PROMPT
+     }
+]
+
 
 def ask_question(user_input):
     messages.append(
@@ -38,6 +46,9 @@ def ask_question(user_input):
         if message.tool_calls:
                 tool_calls = message.tool_calls
                 messages.append(message)
+
+                if message.content:
+                     print(message.content)
 
                 for tool_call in tool_calls:
                         function_name = tool_call.function.name
