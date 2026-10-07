@@ -17,7 +17,7 @@ functions ={
      "get_current_time": get_current_time
      }
 
-SYSTEM_PROMPT = "Before calling any tool, you MUST first write your plan as plain text in 1-2 sentences. Use a tool when necessary. do not guess calculations or time. If no suitable tool is available, say so honestly."
+SYSTEM_PROMPT = "Before calling any tool, you MUST first write your plan as plain text in 1-2 sentences. Use a tool when necessary. do not guess calculations or time. If no suitable tool is available, say so honestly. The answer may include tool results (current time, calculations). Treat them as correct. Only check that every part of the question is answered."
     
 messages = [
      {
@@ -73,10 +73,38 @@ def ask_question(user_input):
                          
         else:
             print(message.content)
+            reflection_result = reflection(user_input, message.content)
+            print(f"[Reflection] {reflection_result}")
             messages.append(message)
             break
     else:
          print("Stopped: max steps reached.") 
+
+REVIEWER_PROMPT = (
+    "Reply with exactly 'OK' if the answer addresses every part of the question. "
+    "Otherwise, reply with one sentence describing what is missing. "
+    "The answer may include tool results (current time, calculations). "
+    "Treat them as correct. Only check that every part of the question is answered."
+)
+
+def reflection(question, answer):
+     messages = [
+          {
+               "role": "system",
+               "content": REVIEWER_PROMPT
+          },
+          {
+               "role": "user",
+               "content": f"Question: {question}\nAnswer: {answer}"
+          }
+     ]
+
+     response = client.chat.completions.create(
+          model="openai/gpt-oss-20b",
+          messages=messages
+     )
+
+     return response.choices[0].message.content
 
 while True:
      user_input = input("You: ")
