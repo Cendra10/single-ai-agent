@@ -17,7 +17,7 @@ functions ={
      "get_current_time": get_current_time
      }
 
-SYSTEM_PROMPT = "Before calling any tool, you MUST first write your plan as plain text in 1-2 sentences. Use a tool when necessary. do not guess calculations or time. If no suitable tool is available, say so honestly. The answer may include tool results (current time, calculations). Treat them as correct. Only check that every part of the question is answered."
+SYSTEM_PROMPT = "Before calling any tool, you MUST first write your plan as plain text in 1-2 sentences. Use a tool when necessary. Do not guess calculations or time. If no suitable tool is available, say so honestly."
     
 messages = [
      {
